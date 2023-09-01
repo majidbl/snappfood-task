@@ -1,0 +1,95 @@
+definitions:
+  api.AssignDelayRequest:
+    properties:
+      agentId:
+        type: integer
+    required:
+    - agentId
+    type: object
+  api.AssignDelayResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      orderId:
+        type: integer
+    type: object
+  api.DelayReportRequest:
+    properties:
+      orderId:
+        type: integer
+    required:
+    - orderId
+    type: object
+  api.DelayReportResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/delay/assign:
+    post:
+      consumes:
+      - application/json
+      description: assign delay of an order that delivery is passed to an agent
+      parameters:
+      - description: necessary item for assign delay
+        in: body
+        name: AssignDelayRequest
+        required: true
+        schema:
+          $ref: '#/definitions/api.AssignDelayRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.AssignDelayResponse'
+        "400":
+          description: some field is invalid
+          schema:
+            $ref: '#/definitions/api.AssignDelayResponse'
+        "500":
+          description: other error
+          schema:
+            $ref: '#/definitions/api.AssignDelayResponse'
+      summary: assign delay
+      tags:
+      - Delay
+  /api/v1/delay/report:
+    post:
+      consumes:
+      - application/json
+      description: report delay of a order that delivery is passed
+      parameters:
+      - description: necessary item for reporting delay
+        in: body
+        name: DelayReportRequest
+        required: true
+        schema:
+          $ref: '#/definitions/api.DelayReportRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.DelayReportResponse'
+        "400":
+          description: some field is invalid
+          schema:
+            $ref: '#/definitions/api.DelayReportResponse'
+        "500":
+          description: other error
+          schema:
+            $ref: '#/definitions/api.DelayReportResponse'
+      summary: report delay
+      tags:
+      - Delay
+swagger: "2.0"
