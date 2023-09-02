@@ -2,11 +2,10 @@ package mysql
 
 import (
 	"sync"
+	"task/config"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-
-	"task/util"
 )
 
 var DB *gorm.DB
@@ -16,7 +15,7 @@ func NewDB() *gorm.DB {
 	return DB
 }
 
-func SetUpDB(config util.Config) error {
+func SetUpDB(config config.Config) error {
 	var dbErr error
 	once.Do(func() {
 		mysqlDB, err := gorm.Open(mysql.Open(config.DBSource), &gorm.Config{})

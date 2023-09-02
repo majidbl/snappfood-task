@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"net/http"
-	"task/dto"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 
+	"task/dto"
 	"task/service"
 )
 
@@ -16,10 +16,10 @@ import (
 // @Tags Delay
 // @Accept json
 // @Produce json
-// @Param DelayReportRequest body DelayReportRequest true "necessary item for reporting delay"
-// @Success 200 {object} DelayReportResponse
-// @Failure	400 {object} DelayReportResponse "some field is invalid"
-// @Failure	500 {object} DelayReportResponse "other error"
+// @Param DelayReportRequest body dto.DelayReportRequest true "necessary item for reporting delay"
+// @Success 200 {object} dto.DelayReportResponse
+// @Failure	400 {object} dto.DelayReportResponse "some field is invalid"
+// @Failure	500 {object} dto.DelayReportResponse "other error"
 // @Router /api/v1/delay/report [post]
 func ReportDelay() echo.HandlerFunc {
 	return func(ctx echo.Context) error {

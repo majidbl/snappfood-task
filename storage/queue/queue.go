@@ -3,12 +3,12 @@ package queue
 import (
 	"context"
 	"sync"
+	"task/config"
 	"task/models"
 
 	"github.com/labstack/gommon/log"
 
 	"task/storage/redis"
-	"task/util"
 )
 
 const (
@@ -25,7 +25,7 @@ const (
 	EmptyQueue = "queue is empty"
 )
 
-func New[T any](config util.Config) Queue[T] {
+func New[T any](config config.Config) Queue[T] {
 	switch config.QueueType {
 	case InMemory:
 		return NewMemoryQueue[T]()
@@ -40,7 +40,7 @@ func New[T any](config util.Config) Queue[T] {
 var OrderQueueManger Queue[models.Order]
 var once sync.Once
 
-func SetUpQueueManager(config util.Config) {
+func SetUpQueueManager(config config.Config) {
 	once.Do(func() {
 		OrderQueueManger = New[models.Order](config)
 	})

@@ -4,14 +4,13 @@ import (
 	"context"
 	"github.com/go-redis/redis/v8"
 	"sync"
-
-	"task/util"
+	"task/config"
 )
 
 var RedisCLi *redis.Client
 var once sync.Once
 
-func SetUpRedis(config util.Config) error {
+func SetUpRedis(config config.Config) error {
 	var redisErr error
 	once.Do(func() {
 		RedisCLi = redis.NewClient(&redis.Options{

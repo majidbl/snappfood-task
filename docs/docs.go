@@ -36,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.AssignDelayRequest"
+                            "$ref": "#/definitions/dto.AssignDelayRequest"
                         }
                     }
                 ],
@@ -44,19 +44,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.AssignDelayResponse"
+                            "$ref": "#/definitions/dto.AssignDelayResponse"
                         }
                     },
                     "400": {
                         "description": "some field is invalid",
                         "schema": {
-                            "$ref": "#/definitions/controllers.AssignDelayResponse"
+                            "$ref": "#/definitions/dto.AssignDelayResponse"
                         }
                     },
                     "500": {
                         "description": "other error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.AssignDelayResponse"
+                            "$ref": "#/definitions/dto.AssignDelayResponse"
                         }
                     }
                 }
@@ -115,7 +115,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.DelayReportRequest"
+                            "$ref": "#/definitions/dto.DelayReportRequest"
                         }
                     }
                 ],
@@ -123,19 +123,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.DelayReportResponse"
+                            "$ref": "#/definitions/dto.DelayReportResponse"
                         }
                     },
                     "400": {
                         "description": "some field is invalid",
                         "schema": {
-                            "$ref": "#/definitions/controllers.DelayReportResponse"
+                            "$ref": "#/definitions/dto.DelayReportResponse"
                         }
                     },
                     "500": {
                         "description": "other error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.DelayReportResponse"
+                            "$ref": "#/definitions/dto.DelayReportResponse"
                         }
                     }
                 }
@@ -143,53 +143,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.AssignDelayRequest": {
-            "type": "object",
-            "required": [
-                "agentId"
-            ],
-            "properties": {
-                "agentId": {
-                    "type": "integer"
-                }
-            }
-        },
-        "controllers.AssignDelayResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "orderId": {
-                    "type": "integer"
-                }
-            }
-        },
-        "controllers.DelayReportRequest": {
-            "type": "object",
-            "required": [
-                "orderId"
-            ],
-            "properties": {
-                "orderId": {
-                    "type": "integer"
-                }
-            }
-        },
-        "controllers.DelayReportResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
         "controllers.ReportDelayResponse": {
             "type": "object",
             "properties": {
@@ -200,6 +153,53 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "result": {}
+            }
+        },
+        "dto.AssignDelayRequest": {
+            "type": "object",
+            "required": [
+                "agentId"
+            ],
+            "properties": {
+                "agentId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.AssignDelayResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "orderId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.DelayReportRequest": {
+            "type": "object",
+            "required": [
+                "orderId"
+            ],
+            "properties": {
+                "orderId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.DelayReportResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
             }
         }
     }

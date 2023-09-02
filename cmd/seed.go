@@ -6,28 +6,24 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"log"
 
+	"task/config"
 	"task/models"
-	"task/util"
 )
 
 // seedCmd represents the seed command
 var seedCmd = &cobra.Command{
 	Use:   "seed",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "seed database",
+	Long:  `seed database fill vendor, order, trips, delay report with fake data`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("seed called")
-		config, err := util.LoadConfig(".")
+		config, err := config.LoadConfig(".")
 		if err != nil {
 			panic(err.Error())
 		}

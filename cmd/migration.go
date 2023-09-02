@@ -11,8 +11,8 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
+	"task/config"
 	mysqlStorage "task/storage/mysql"
-	"task/util"
 )
 
 // migrationCmd represents the migration command
@@ -37,7 +37,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("migration up called")
-		config, err := util.LoadConfig(".")
+		config, err := config.LoadConfig(".")
 		if err != nil {
 			panic(err.Error())
 		}
@@ -65,7 +65,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("migration down called")
-		config, err := util.LoadConfig(".")
+		config, err := config.LoadConfig(".")
 		if err != nil {
 			panic(err.Error())
 		}

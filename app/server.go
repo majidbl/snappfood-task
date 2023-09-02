@@ -4,14 +4,14 @@ import (
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
+	"task/config"
 	"task/controllers"
 	"task/docs"
 	"task/storage/mysql"
 	"task/storage/queue"
-	"task/util"
 )
 
-func NewServer(config util.Config) {
+func NewServer(config config.Config) {
 	queue.SetUpQueueManager(config)
 
 	err := mysql.SetUpDB(config)

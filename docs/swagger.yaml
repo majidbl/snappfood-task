@@ -1,34 +1,4 @@
 definitions:
-  controllers.AssignDelayRequest:
-    properties:
-      agentId:
-        type: integer
-    required:
-    - agentId
-    type: object
-  controllers.AssignDelayResponse:
-    properties:
-      code:
-        type: integer
-      message:
-        type: string
-      orderId:
-        type: integer
-    type: object
-  controllers.DelayReportRequest:
-    properties:
-      orderId:
-        type: integer
-    required:
-    - orderId
-    type: object
-  controllers.DelayReportResponse:
-    properties:
-      code:
-        type: integer
-      message:
-        type: string
-    type: object
   controllers.ReportDelayResponse:
     properties:
       code:
@@ -36,6 +6,36 @@ definitions:
       message:
         type: string
       result: {}
+    type: object
+  dto.AssignDelayRequest:
+    properties:
+      agentId:
+        type: integer
+    required:
+    - agentId
+    type: object
+  dto.AssignDelayResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      orderId:
+        type: integer
+    type: object
+  dto.DelayReportRequest:
+    properties:
+      orderId:
+        type: integer
+    required:
+    - orderId
+    type: object
+  dto.DelayReportResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
     type: object
 info:
   contact: {}
@@ -51,22 +51,22 @@ paths:
         name: AssignDelayRequest
         required: true
         schema:
-          $ref: '#/definitions/controllers.AssignDelayRequest'
+          $ref: '#/definitions/dto.AssignDelayRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.AssignDelayResponse'
+            $ref: '#/definitions/dto.AssignDelayResponse'
         "400":
           description: some field is invalid
           schema:
-            $ref: '#/definitions/controllers.AssignDelayResponse'
+            $ref: '#/definitions/dto.AssignDelayResponse'
         "500":
           description: other error
           schema:
-            $ref: '#/definitions/controllers.AssignDelayResponse'
+            $ref: '#/definitions/dto.AssignDelayResponse'
       summary: assign delay
       tags:
       - Delay
@@ -103,22 +103,22 @@ paths:
         name: DelayReportRequest
         required: true
         schema:
-          $ref: '#/definitions/controllers.DelayReportRequest'
+          $ref: '#/definitions/dto.DelayReportRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.DelayReportResponse'
+            $ref: '#/definitions/dto.DelayReportResponse'
         "400":
           description: some field is invalid
           schema:
-            $ref: '#/definitions/controllers.DelayReportResponse'
+            $ref: '#/definitions/dto.DelayReportResponse'
         "500":
           description: other error
           schema:
-            $ref: '#/definitions/controllers.DelayReportResponse'
+            $ref: '#/definitions/dto.DelayReportResponse'
       summary: report delay
       tags:
       - Delay

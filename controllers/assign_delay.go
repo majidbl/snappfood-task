@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"net/http"
-	"task/dto"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 
+	"task/dto"
 	"task/service"
 )
 
@@ -17,10 +17,10 @@ import (
 // @Tags Delay
 // @Accept json
 // @Produce json
-// @Param AssignDelayRequest body AssignDelayRequest true "necessary item for assign delay"
-// @Success 200 {object} AssignDelayResponse
-// @Failure	400 {object} AssignDelayResponse "some field is invalid"
-// @Failure	500 {object} AssignDelayResponse "other error"
+// @Param AssignDelayRequest body dto.AssignDelayRequest true "necessary item for assign delay"
+// @Success 200 {object} dto.AssignDelayResponse
+// @Failure	400 {object} dto.AssignDelayResponse "some field is invalid"
+// @Failure	500 {object} dto.AssignDelayResponse "other error"
 // @Router /api/v1/delay/assign [post]
 func AssignDelay() echo.HandlerFunc {
 	return func(ctx echo.Context) error {
