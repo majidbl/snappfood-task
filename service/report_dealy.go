@@ -23,7 +23,7 @@ func DelayReport(ctx context.Context, request dto.DelayReportRequest) (dto.Delay
 		ctx,
 		func(c context.Context, store mysql.Store) error {
 			// Check order exists and it's delivery time passed
-			order, err := store.GetDelayedOrder(c, request.OrderId)
+			order, err := store.GetOrderById(c, request.OrderId)
 			if err != nil {
 				if err.Error() == storage.NotFound {
 					res.Code = models.ErrCode[models.OrderNotFountError]
@@ -38,13 +38,14 @@ func DelayReport(ctx context.Context, request dto.DelayReportRequest) (dto.Delay
 
 			}
 
+			// check if order not delayed return error
 			if !order.CreatedAt.Add(time.Minute * time.Duration(order.DeliveryTime)).Before(time.Now()) {
 				res.Code = models.ErrCode[models.OrderNotDelayedError]
 				res.Message = models.OrderNotDelayedError
 				return util.NewError(res.Code, res.Message)
 			}
 
-			// Check order delay report exists and it's status is ok
+			// Check order delay report exists, and if exists its status is reviewed
 			var orderDelayReportErr error
 
 			res, orderDelayReportErr = CheckOrderDelayReport(c, store, order.ID)
@@ -101,7 +102,9 @@ func DelayReport(ctx context.Context, request dto.DelayReportRequest) (dto.Delay
 					})
 			}
 
-			return nil
+			res.Code = models.ErrCode[models.OrderDeliveredError]
+			res.Message = models.OrderDeliveredError
+			return util.NewError(res.Code, res.Message)
 		})
 
 	return res, err

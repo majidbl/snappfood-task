@@ -3,6 +3,7 @@ package models
 const (
 	OrderNotFountError               = "order not found"
 	OrderNotDelayedError             = "order not delayed"
+	OrderDeliveredError              = "order delivered"
 	DelayedOrderNotFoundError        = "delayed order not found"
 	OrderTripsNotFountError          = "order trips not found"
 	OrderDelayReportNotFountError    = "order delay report not found"
@@ -15,6 +16,7 @@ const (
 var ErrCode = map[string]int{
 	OrderNotFountError:               100404,
 	OrderNotDelayedError:             100400,
+	OrderDeliveredError:              100420,
 	DelayedOrderNotFoundError:        100410,
 	OrderTripsNotFountError:          200404,
 	OrderDelayReportNotFountError:    300404,

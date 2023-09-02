@@ -14,7 +14,7 @@ func (s Store) UpdateOrder(ctx context.Context, order *models.Order) error {
 	return s.db.Updates(order).Error
 }
 
-func (s Store) GetDelayedOrder(ctx context.Context, id uint) (models.Order, error) {
+func (s Store) GetOrderById(ctx context.Context, id uint) (models.Order, error) {
 	var order models.Order
 	result := s.db.First(&order, "id=?", id)
 	return order, result.Error
