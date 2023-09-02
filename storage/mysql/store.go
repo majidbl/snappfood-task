@@ -1,4 +1,4 @@
-package db
+package mysql
 
 import (
 	"context"
@@ -13,7 +13,7 @@ type Store struct {
 	db *gorm.DB
 }
 
-func New() Store {
+func NewStore() Store {
 	return Store{
 		db: NewDB(),
 	}

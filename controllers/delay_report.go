@@ -1,12 +1,12 @@
-package api
+package controllers
 
 import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 
-	"task/db"
 	"task/models"
+	"task/storage/mysql"
 )
 
 type ReportDelayResponse struct {
@@ -30,7 +30,7 @@ func DelayReport() echo.HandlerFunc {
 		c := ctx.Request().Context()
 
 		var response ReportDelayResponse
-		res, err := db.New().GetVendorsTotalDelay(c)
+		res, err := mysql.NewStore().GetVendorsTotalDelay(c)
 		if err != nil {
 			return ctx.JSON(http.StatusInternalServerError, err.Error())
 		}

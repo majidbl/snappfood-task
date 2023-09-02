@@ -1,4 +1,4 @@
-package api
+package controllers
 
 import (
 	"context"
@@ -10,8 +10,10 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 
-	"task/db"
 	"task/models"
+	"task/storage"
+	"task/storage/mysql"
+	"task/storage/queue"
 	"task/util"
 )
 
@@ -50,17 +52,17 @@ func ReportDelay() echo.HandlerFunc {
 		}
 
 		c := ctx.Request().Context()
-		store := db.New()
+		store := mysql.NewStore()
 
 		var res DelayReportResponse
 
 		err := store.Transaction(
 			c,
-			func(ctx context.Context, store db.Store) error {
+			func(ctx context.Context, store mysql.Store) error {
 				// Check order exists and it's delivery time passed
 				order, err := store.GetDelayedOrder(c, request.OrderId)
 				if err != nil {
-					if err.Error() == db.NotFound {
+					if err.Error() == storage.NotFound {
 						res.Code = models.ErrCode[models.OrderNotFountError]
 						res.Message = models.OrderNotFountError
 						return util.NewError(res.Code, res.Message)
@@ -81,7 +83,7 @@ func ReportDelay() echo.HandlerFunc {
 
 				// Check order delay report exists and it's status is ok
 				orderDelayReport, orderDelayReportErr := store.GetOrderDelayReport(c, request.OrderId)
-				if orderDelayReportErr != nil && orderDelayReportErr.Error() != db.NotFound {
+				if orderDelayReportErr != nil && orderDelayReportErr.Error() != storage.NotFound {
 					log.Println(orderDelayReportErr.Error())
 					res.Code = models.ErrCode[models.InternalErrorError]
 					res.Message = models.InternalErrorError
@@ -104,7 +106,7 @@ func ReportDelay() echo.HandlerFunc {
 				}
 
 				// if the order has no active trips, then immediately we need to create a delay report
-				if getOrderTripsErr != nil && getOrderTripsErr.Error() == db.NotFound {
+				if getOrderTripsErr != nil && getOrderTripsErr.Error() == storage.NotFound {
 					return store.CreateDelayReport(
 						c,
 						&models.DelayReport{
@@ -123,7 +125,7 @@ func ReportDelay() echo.HandlerFunc {
 						time.Now().Add(time.Minute*time.Duration(delayTime)),
 					)
 
-					queueErr := OrderQueueManger.Enqueue(c, order)
+					queueErr := queue.OrderQueueManger.Enqueue(c, order)
 					if queueErr != nil {
 						return queueErr
 					}

@@ -6,22 +6,19 @@ package cmd
 
 import (
 	"fmt"
-	"task/api"
-	"task/util"
 
 	"github.com/spf13/cobra"
+
+	"task/app"
+	"task/util"
 )
 
 // restCmd represents the rest command
 var restCmd = &cobra.Command{
 	Use:   "rest",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "delay notification rest server",
+	Long: `delay notification rest server for report order delay, assign delayed order to an free agent and report
+            vendor delay`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("rest called")
 		c, err := util.LoadConfig(".")

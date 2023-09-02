@@ -36,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api.AssignDelayRequest"
+                            "$ref": "#/definitions/controllers.AssignDelayRequest"
                         }
                     }
                 ],
@@ -44,25 +44,58 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api.AssignDelayResponse"
+                            "$ref": "#/definitions/controllers.AssignDelayResponse"
                         }
                     },
                     "400": {
                         "description": "some field is invalid",
                         "schema": {
-                            "$ref": "#/definitions/api.AssignDelayResponse"
+                            "$ref": "#/definitions/controllers.AssignDelayResponse"
                         }
                     },
                     "500": {
                         "description": "other error",
                         "schema": {
-                            "$ref": "#/definitions/api.AssignDelayResponse"
+                            "$ref": "#/definitions/controllers.AssignDelayResponse"
                         }
                     }
                 }
             }
         },
         "/api/v1/delay/report": {
+            "get": {
+                "description": "report delay of an order that delivery is passed",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Delay"
+                ],
+                "summary": "report delay",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ReportDelayResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "some field is invalid",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ReportDelayResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "other error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ReportDelayResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "report delay of a order that delivery is passed",
                 "consumes": [
@@ -82,7 +115,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api.DelayReportRequest"
+                            "$ref": "#/definitions/controllers.DelayReportRequest"
                         }
                     }
                 ],
@@ -90,19 +123,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/api.DelayReportResponse"
+                            "$ref": "#/definitions/controllers.DelayReportResponse"
                         }
                     },
                     "400": {
                         "description": "some field is invalid",
                         "schema": {
-                            "$ref": "#/definitions/api.DelayReportResponse"
+                            "$ref": "#/definitions/controllers.DelayReportResponse"
                         }
                     },
                     "500": {
                         "description": "other error",
                         "schema": {
-                            "$ref": "#/definitions/api.DelayReportResponse"
+                            "$ref": "#/definitions/controllers.DelayReportResponse"
                         }
                     }
                 }
@@ -110,7 +143,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "api.AssignDelayRequest": {
+        "controllers.AssignDelayRequest": {
             "type": "object",
             "required": [
                 "agentId"
@@ -121,7 +154,7 @@ const docTemplate = `{
                 }
             }
         },
-        "api.AssignDelayResponse": {
+        "controllers.AssignDelayResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -135,7 +168,7 @@ const docTemplate = `{
                 }
             }
         },
-        "api.DelayReportRequest": {
+        "controllers.DelayReportRequest": {
             "type": "object",
             "required": [
                 "orderId"
@@ -146,7 +179,7 @@ const docTemplate = `{
                 }
             }
         },
-        "api.DelayReportResponse": {
+        "controllers.DelayReportResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -155,6 +188,18 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 }
+            }
+        },
+        "controllers.ReportDelayResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "result": {}
             }
         }
     }

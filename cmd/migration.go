@@ -11,35 +11,17 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"task/db"
+	mysqlStorage "task/storage/mysql"
 	"task/util"
 )
 
 // migrationCmd represents the migration command
 var migrationCmd = &cobra.Command{
 	Use:   "migration",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "run migration",
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("migration called")
-		//config, err := util.LoadConfig(".")
-		//if err != nil {
-		//	panic(err.Error())
-		//}
-		//
-		//mysqlDB, err := gorm.Open(mysql.Open(config.DBSource), &gorm.Config{})
-		//if err != nil {
-		//	panic(err.Error())
-		//}
-		//
-		//if err := db.Migrate(mysqlDB); err != nil {
-		//	panic(err.Error())
-		//}
 	},
 }
 
@@ -65,7 +47,7 @@ to quickly create a Cobra application.`,
 			panic(err.Error())
 		}
 
-		if err := db.MigrateUp(mysqlDB); err != nil {
+		if err := mysqlStorage.MigrateUp(mysqlDB); err != nil {
 			panic(err.Error())
 		}
 	},
@@ -93,7 +75,7 @@ to quickly create a Cobra application.`,
 			panic(err.Error())
 		}
 
-		if err := db.MigrateDown(mysqlDB); err != nil {
+		if err := mysqlStorage.MigrateDown(mysqlDB); err != nil {
 			panic(err.Error())
 		}
 	},

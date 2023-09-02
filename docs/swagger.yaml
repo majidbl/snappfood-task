@@ -1,12 +1,12 @@
 definitions:
-  api.AssignDelayRequest:
+  controllers.AssignDelayRequest:
     properties:
       agentId:
         type: integer
     required:
     - agentId
     type: object
-  api.AssignDelayResponse:
+  controllers.AssignDelayResponse:
     properties:
       code:
         type: integer
@@ -15,19 +15,27 @@ definitions:
       orderId:
         type: integer
     type: object
-  api.DelayReportRequest:
+  controllers.DelayReportRequest:
     properties:
       orderId:
         type: integer
     required:
     - orderId
     type: object
-  api.DelayReportResponse:
+  controllers.DelayReportResponse:
     properties:
       code:
         type: integer
       message:
         type: string
+    type: object
+  controllers.ReportDelayResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      result: {}
     type: object
 info:
   contact: {}
@@ -43,26 +51,48 @@ paths:
         name: AssignDelayRequest
         required: true
         schema:
-          $ref: '#/definitions/api.AssignDelayRequest'
+          $ref: '#/definitions/controllers.AssignDelayRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api.AssignDelayResponse'
+            $ref: '#/definitions/controllers.AssignDelayResponse'
         "400":
           description: some field is invalid
           schema:
-            $ref: '#/definitions/api.AssignDelayResponse'
+            $ref: '#/definitions/controllers.AssignDelayResponse'
         "500":
           description: other error
           schema:
-            $ref: '#/definitions/api.AssignDelayResponse'
+            $ref: '#/definitions/controllers.AssignDelayResponse'
       summary: assign delay
       tags:
       - Delay
   /api/v1/delay/report:
+    get:
+      consumes:
+      - application/json
+      description: report delay of an order that delivery is passed
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ReportDelayResponse'
+        "400":
+          description: some field is invalid
+          schema:
+            $ref: '#/definitions/controllers.ReportDelayResponse'
+        "500":
+          description: other error
+          schema:
+            $ref: '#/definitions/controllers.ReportDelayResponse'
+      summary: report delay
+      tags:
+      - Delay
     post:
       consumes:
       - application/json
@@ -73,22 +103,22 @@ paths:
         name: DelayReportRequest
         required: true
         schema:
-          $ref: '#/definitions/api.DelayReportRequest'
+          $ref: '#/definitions/controllers.DelayReportRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/api.DelayReportResponse'
+            $ref: '#/definitions/controllers.DelayReportResponse'
         "400":
           description: some field is invalid
           schema:
-            $ref: '#/definitions/api.DelayReportResponse'
+            $ref: '#/definitions/controllers.DelayReportResponse'
         "500":
           description: other error
           schema:
-            $ref: '#/definitions/api.DelayReportResponse'
+            $ref: '#/definitions/controllers.DelayReportResponse'
       summary: report delay
       tags:
       - Delay

@@ -1,9 +1,11 @@
-package db
+package mysql
 
 import (
+	"sync"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"sync"
+
 	"task/util"
 )
 

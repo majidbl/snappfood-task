@@ -2,10 +2,13 @@ package queue
 
 import (
 	"context"
-	"task/db"
-	"task/util"
+	"sync"
+	"task/models"
 
 	"github.com/labstack/gommon/log"
+
+	"task/storage/redis"
+	"task/util"
 )
 
 const (
@@ -27,9 +30,18 @@ func New[T any](config util.Config) Queue[T] {
 	case InMemory:
 		return NewMemoryQueue[T]()
 	case Redis:
-		return NewRedisQueue[T](db.NewRedisCli(), config.OrderQueueKey)
+		return NewRedisQueue[T](redis.NewRedisCli(), config.OrderQueueKey)
 	}
 
 	log.Warn("Queue type is default [memory]")
 	return NewMemoryQueue[T]()
+}
+
+var OrderQueueManger Queue[models.Order]
+var once sync.Once
+
+func SetUpQueueManager(config util.Config) {
+	once.Do(func() {
+		OrderQueueManger = New[models.Order](config)
+	})
 }

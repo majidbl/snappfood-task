@@ -1,14 +1,15 @@
-package db
+package redis
 
 import (
 	"context"
-
 	"github.com/go-redis/redis/v8"
+	"sync"
 
 	"task/util"
 )
 
 var RedisCLi *redis.Client
+var once sync.Once
 
 func SetUpRedis(config util.Config) error {
 	var redisErr error

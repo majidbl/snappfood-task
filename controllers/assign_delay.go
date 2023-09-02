@@ -1,4 +1,4 @@
-package api
+package controllers
 
 import (
 	"context"
@@ -8,9 +8,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 
-	"task/db"
 	"task/models"
-	"task/pkg/queue"
+	"task/storage"
+	"task/storage/mysql"
+	"task/storage/queue"
 	"task/util"
 )
 
@@ -50,13 +51,13 @@ func AssignDelay() echo.HandlerFunc {
 		}
 
 		c := ctx.Request().Context()
-		store := db.New()
+		store := mysql.NewStore()
 
 		var res AssignDelayResponse
 
 		err := store.Transaction(
 			c,
-			func(ctx context.Context, store db.Store) error {
+			func(ctx context.Context, store mysql.Store) error {
 				agent, err := store.GetAgent(c, request.AgentId)
 				if err != nil {
 					return err
@@ -68,7 +69,7 @@ func AssignDelay() echo.HandlerFunc {
 					return util.NewError(res.Code, res.Message)
 				}
 
-				order, queueErr := OrderQueueManger.Dequeue(c)
+				order, queueErr := queue.OrderQueueManger.Dequeue(c)
 				if queueErr != nil && queueErr.Error() != queue.EmptyQueue {
 					log.Warn(queueErr.Error())
 					res.Code = models.ErrCode[models.InternalErrorError]
@@ -93,7 +94,7 @@ func AssignDelay() echo.HandlerFunc {
 					}
 
 					for _, m := range orders {
-						enqueueErr := OrderQueueManger.Enqueue(c, m)
+						enqueueErr := queue.OrderQueueManger.Enqueue(c, m)
 						if enqueueErr != nil {
 							log.Warn(enqueueErr.Error())
 							res.Code = models.ErrCode[models.InternalErrorError]
@@ -105,7 +106,7 @@ func AssignDelay() echo.HandlerFunc {
 
 				// Check order delay report exists and it's status is ok
 				orderDelayReport, orderDelayReportErr := store.GetOrderDelayReport(c, order.ID)
-				if orderDelayReportErr != nil && orderDelayReportErr.Error() != db.NotFound {
+				if orderDelayReportErr != nil && orderDelayReportErr.Error() != storage.NotFound {
 					log.Warn(orderDelayReportErr.Error())
 					res.Code = models.ErrCode[models.InternalErrorError]
 					res.Message = models.InternalErrorError
@@ -129,7 +130,7 @@ func AssignDelay() echo.HandlerFunc {
 				updateAgentErr := store.UpdateAgent(c, &agent)
 
 				if updateOrderErr != nil || updateAgentErr != nil || updateOrderDelayReportErr != nil {
-					enqueueErr := OrderQueueManger.Enqueue(c, order)
+					enqueueErr := queue.OrderQueueManger.Enqueue(c, order)
 					if enqueueErr != nil {
 						log.Warn(enqueueErr.Error())
 					}

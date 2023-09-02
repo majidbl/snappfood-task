@@ -1,7 +1,8 @@
-package db
+package mysql
 
 import (
 	"context"
+
 	"task/models"
 )
 

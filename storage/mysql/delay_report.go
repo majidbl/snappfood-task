@@ -1,4 +1,4 @@
-package db
+package mysql
 
 import (
 	"context"
@@ -11,7 +11,7 @@ func (s Store) CreateDelayReport(ctx context.Context, delayReport *models.DelayR
 }
 
 func (s Store) UpdateDelayReport(ctx context.Context, delayReport *models.DelayReport) error {
-	return s.db.Save(delayReport).Error
+	return s.db.Updates(delayReport).Error
 }
 
 func (s Store) GetOrderDelayReport(ctx context.Context, orderId uint) (models.DelayReport, error) {
