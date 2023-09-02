@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"net/http"
+	"task/dto"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 
 	"task/service"
-	"task/service/dto"
 )
 
 // ReportDelay godoc

@@ -2,13 +2,13 @@ package controllers
 
 import (
 	"net/http"
+	"task/dto"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 
 	"task/service"
-	"task/service/dto"
 )
 
 // AssignDelay godoc

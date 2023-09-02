@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"task/dto"
 	"time"
 
 	"task/models"
-	"task/service/dto"
 	"task/storage"
 	"task/storage/mysql"
 	"task/storage/queue"

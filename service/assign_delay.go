@@ -2,11 +2,11 @@ package service
 
 import (
 	"context"
+	"task/dto"
 
 	"github.com/labstack/gommon/log"
 
 	"task/models"
-	"task/service/dto"
 	"task/storage"
 	"task/storage/mysql"
 	"task/storage/queue"
