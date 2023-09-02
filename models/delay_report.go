@@ -11,6 +11,7 @@ const (
 type DelayReport struct {
 	*gorm.Model
 	OrderID      uint   `json:"order_id"`
+	VendorID     uint   `json:"vendor_id"`
 	AgentId      uint   `json:"agent_id"`
 	DeliveryTime int    `json:"delivery_time"`
 	Status       string `json:"status"`

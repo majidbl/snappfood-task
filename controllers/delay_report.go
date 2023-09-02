@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"task/models"
-	"task/storage/mysql"
+	"task/service"
 )
 
 type ReportDelayResponse struct {
@@ -30,9 +30,12 @@ func DelayReport() echo.HandlerFunc {
 		c := ctx.Request().Context()
 
 		var response ReportDelayResponse
-		res, err := mysql.NewStore().GetVendorsTotalDelay(c)
+
+		res, err := service.ReportDelay(c)
 		if err != nil {
-			return ctx.JSON(http.StatusInternalServerError, err.Error())
+			response.Code = models.ErrCode[models.InternalErrorError]
+			response.Message = models.InternalErrorError
+			return ctx.JSON(http.StatusInternalServerError, response)
 		}
 
 		response.Result = res
