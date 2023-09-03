@@ -43,7 +43,7 @@ func (s Store) Transaction(ctx context.Context, fn Fn) (err error) {
 	}
 
 	err = fn(ctx, newStore)
-	return nil
+	return err
 }
 
 func (s Store) GetOrderTrip(ctx context.Context, orderId uint) (models.Trip, error) {
