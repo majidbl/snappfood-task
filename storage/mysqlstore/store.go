@@ -5,8 +5,6 @@ import (
 	"fmt"
 
 	"gorm.io/gorm"
-
-	"task/storage/mysql"
 )
 
 type Fn func(context.Context, IStore) error
@@ -16,6 +14,7 @@ type store struct {
 	order       IOrder
 	vendor      IVendor
 	delayReport IDelayReport
+	trip        ITrip
 }
 
 type transaction struct {
@@ -27,6 +26,7 @@ type IStore interface {
 	Order() IOrder
 	Vendor() IVendor
 	DelayReport() IDelayReport
+	Trip() ITrip
 }
 
 type ITransaction interface {
@@ -49,12 +49,16 @@ func (s store) DelayReport() IDelayReport {
 	return s.delayReport
 }
 
+func (s store) Trip() ITrip {
+	return s.trip
+}
+
 func NewStore() ITransaction {
 	return &transaction{}
 }
 
 func (s transaction) Transaction(ctx context.Context, fn Fn) (err error) {
-	tx := mysql.NewDB().Begin()
+	tx := DB.Begin()
 
 	defer func() {
 		if p := recover(); p != nil {
@@ -75,6 +79,7 @@ func (s transaction) Transaction(ctx context.Context, fn Fn) (err error) {
 		order:       NewOrder(tx),
 		vendor:      NewVendor(tx),
 		delayReport: NewDelayReport(tx),
+		trip:        NewTrip(tx),
 	}
 
 	err = fn(ctx, newStore)

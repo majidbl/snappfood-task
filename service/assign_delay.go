@@ -8,20 +8,18 @@ import (
 
 	"task/models"
 	"task/storage"
-	"task/storage/mysql"
+	"task/storage/mysqlstore"
 	"task/storage/queue"
 	"task/util"
 )
 
-func AssignDelay(c context.Context, request dto.AssignDelayRequest) (dto.AssignDelayResponse, error) {
-	store := mysql.NewStore()
-
+func (s service) AssignDelay(c context.Context, request dto.AssignDelayRequest) (dto.AssignDelayResponse, error) {
 	var res dto.AssignDelayResponse
 
-	err := store.Transaction(
+	err := s.db.Transaction(
 		c,
-		func(ctx context.Context, store mysql.Store) error {
-			agent, err := store.GetAgent(ctx, request.AgentId)
+		func(ctx context.Context, store mysqlstore.IStore) error {
+			agent, err := store.Agent().GetAgent(ctx, request.AgentId)
 			if err != nil {
 				res.Code = models.ErrCode[models.InternalErrorError]
 				res.Message = models.InternalErrorError
@@ -47,7 +45,7 @@ func AssignDelay(c context.Context, request dto.AssignDelayRequest) (dto.AssignD
 			}
 
 			// Check order delay report exists and it's status is ok
-			orderDelayReport, orderDelayReportErr := store.GetOrderDelayReport(c, order.ID)
+			orderDelayReport, orderDelayReportErr := store.DelayReport().GetOrderDelayReport(c, order.ID)
 			if orderDelayReportErr != nil && orderDelayReportErr.Error() != storage.NotFound {
 				log.Warn(orderDelayReportErr.Error())
 				res.Code = models.ErrCode[models.InternalErrorError]
@@ -68,9 +66,9 @@ func AssignDelay(c context.Context, request dto.AssignDelayRequest) (dto.AssignD
 			orderDelayReport.Status = models.ReportAssigned
 			orderDelayReport.AgentId = agent.ID
 
-			updateOrderErr := store.UpdateOrder(c, &order)
-			updateOrderDelayReportErr := store.UpdateDelayReport(c, &orderDelayReport)
-			updateAgentErr := store.UpdateAgent(c, &agent)
+			updateOrderErr := store.Order().UpdateOrder(c, &order)
+			updateOrderDelayReportErr := store.DelayReport().UpdateDelayReport(c, &orderDelayReport)
+			updateAgentErr := store.Agent().UpdateAgent(c, &agent)
 
 			if updateOrderErr != nil || updateAgentErr != nil || updateOrderDelayReportErr != nil {
 				enqueueErr := queue.OrderQueueManger.Enqueue(c, order)
@@ -91,10 +89,10 @@ func AssignDelay(c context.Context, request dto.AssignDelayRequest) (dto.AssignD
 	return res, err
 }
 
-func FillQueueWithDelayedOrder(ctx context.Context, store mysql.Store) (dto.AssignDelayResponse, error) {
+func FillQueueWithDelayedOrder(ctx context.Context, store mysqlstore.IStore) (dto.AssignDelayResponse, error) {
 	var res dto.AssignDelayResponse
 	// if Order Queue Manager Was empty, we can check a database as reference
-	orders, ordersDelayedReportErr := store.GetDelayedOrders(ctx)
+	orders, ordersDelayedReportErr := store.Order().GetDelayedOrders(ctx)
 	if ordersDelayedReportErr != nil {
 		log.Warn(ordersDelayedReportErr.Error())
 		res.Code = models.ErrCode[models.InternalErrorError]

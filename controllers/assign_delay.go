@@ -8,7 +8,6 @@ import (
 	"github.com/labstack/gommon/log"
 
 	"task/dto"
-	"task/service"
 )
 
 // AssignDelay godoc
@@ -22,7 +21,7 @@ import (
 // @Failure	400 {object} dto.AssignDelayResponse "some field is invalid"
 // @Failure	500 {object} dto.AssignDelayResponse "other error"
 // @Router /api/v1/delay/assign [post]
-func AssignDelay() echo.HandlerFunc {
+func (ctrl Controller) AssignDelay() echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		request := dto.AssignDelayRequest{}
 		if err := ctx.Bind(&request); err != nil {
@@ -36,7 +35,7 @@ func AssignDelay() echo.HandlerFunc {
 
 		c := ctx.Request().Context()
 
-		res, err := service.AssignDelay(c, request)
+		res, err := ctrl.service.AssignDelay(c, request)
 		if err != nil {
 			log.Warn(err.Error())
 			return ctx.JSON(http.StatusInternalServerError, err.Error())

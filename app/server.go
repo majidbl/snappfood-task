@@ -7,17 +7,24 @@ import (
 	"task/config"
 	"task/controllers"
 	"task/docs"
-	"task/storage/mysql"
+	"task/service"
+	"task/storage/mysqlstore"
 	"task/storage/queue"
 )
 
 func NewServer(config config.Config) {
 	queue.SetUpQueueManager(config)
 
-	err := mysql.SetUpDB(config)
+	err := mysqlstore.SetUpDB(config)
 	if err != nil {
 		panic(err.Error())
 	}
+
+	store := mysqlstore.NewStore()
+	vendor := mysqlstore.NewVendor(mysqlstore.NewDB())
+
+	notificationService := service.NewService(store, vendor)
+	ctrl := controllers.NewController(notificationService)
 
 	e := echo.New()
 
@@ -25,9 +32,9 @@ func NewServer(config config.Config) {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	v1 := e.Group("api/v1")
-	v1.POST("/delay/report", controllers.ReportDelay())
-	v1.POST("/delay/assign", controllers.AssignDelay())
-	v1.GET("/delay/report", controllers.DelayReport())
+	v1.POST("/delay/report", ctrl.ReportDelay())
+	v1.POST("/delay/assign", ctrl.AssignDelay())
+	v1.GET("/delay/report", ctrl.DelayReport())
 
 	e.Logger.Fatal(e.Start(config.HTTPServerAddress))
 }
