@@ -1,4 +1,4 @@
-package mysql2
+package mysqlstore
 
 import (
 	"context"
