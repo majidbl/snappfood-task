@@ -3,15 +3,18 @@ package mysql2
 import (
 	"context"
 	"fmt"
+
 	"gorm.io/gorm"
+
 	"task/storage/mysql"
 )
 
 type Fn func(context.Context, IStore) error
 
 type store struct {
-	agent IAgent
-	order IOrder
+	agent  IAgent
+	order  IOrder
+	vendor IVendor
 }
 
 type storex struct {
@@ -21,6 +24,7 @@ type storex struct {
 type IStore interface {
 	Agent() IAgent
 	Order() IOrder
+	Vendor() IVendor
 }
 
 type IStorex interface {
@@ -33,6 +37,10 @@ func (s store) Agent() IAgent {
 
 func (s store) Order() IOrder {
 	return s.order
+}
+
+func (s store) Vendor() IVendor {
+	return s.vendor
 }
 
 func NewStore() IStorex {
@@ -57,7 +65,9 @@ func (s storex) Transaction(ctx context.Context, fn Fn) (err error) {
 	}()
 
 	newStore := store{
-		agent: NewAgent(tx),
+		agent:  NewAgent(tx),
+		order:  NewOrder(tx),
+		vendor: NewVendor(tx),
 	}
 
 	err = fn(ctx, newStore)
