@@ -11,6 +11,7 @@ type Fn func(context.Context, IStore) error
 
 type store struct {
 	agent IAgent
+	order IOrder
 }
 
 type storex struct {
@@ -19,6 +20,7 @@ type storex struct {
 
 type IStore interface {
 	Agent() IAgent
+	Order() IOrder
 }
 
 type IStorex interface {
@@ -27,6 +29,10 @@ type IStorex interface {
 
 func (s store) Agent() IAgent {
 	return s.agent
+}
+
+func (s store) Order() IOrder {
+	return s.order
 }
 
 func NewStore() IStorex {
