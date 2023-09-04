@@ -12,9 +12,10 @@ import (
 type Fn func(context.Context, IStore) error
 
 type store struct {
-	agent  IAgent
-	order  IOrder
-	vendor IVendor
+	agent       IAgent
+	order       IOrder
+	vendor      IVendor
+	delayReport IDelayReport
 }
 
 type storex struct {
@@ -25,6 +26,7 @@ type IStore interface {
 	Agent() IAgent
 	Order() IOrder
 	Vendor() IVendor
+	DelayReport() IDelayReport
 }
 
 type IStorex interface {
@@ -41,6 +43,10 @@ func (s store) Order() IOrder {
 
 func (s store) Vendor() IVendor {
 	return s.vendor
+}
+
+func (s store) DelayReport() IDelayReport {
+	return s.delayReport
 }
 
 func NewStore() IStorex {
@@ -65,9 +71,10 @@ func (s storex) Transaction(ctx context.Context, fn Fn) (err error) {
 	}()
 
 	newStore := store{
-		agent:  NewAgent(tx),
-		order:  NewOrder(tx),
-		vendor: NewVendor(tx),
+		agent:       NewAgent(tx),
+		order:       NewOrder(tx),
+		vendor:      NewVendor(tx),
+		delayReport: NewDelayReport(tx),
 	}
 
 	err = fn(ctx, newStore)
