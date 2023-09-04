@@ -18,7 +18,7 @@ type store struct {
 	delayReport IDelayReport
 }
 
-type storex struct {
+type transaction struct {
 	db *gorm.DB
 }
 
@@ -29,7 +29,7 @@ type IStore interface {
 	DelayReport() IDelayReport
 }
 
-type IStorex interface {
+type ITransaction interface {
 	Transaction(ctx context.Context, fn Fn) (err error)
 }
 
@@ -49,11 +49,11 @@ func (s store) DelayReport() IDelayReport {
 	return s.delayReport
 }
 
-func NewStore() IStorex {
-	return &storex{}
+func NewStore() ITransaction {
+	return &transaction{}
 }
 
-func (s storex) Transaction(ctx context.Context, fn Fn) (err error) {
+func (s transaction) Transaction(ctx context.Context, fn Fn) (err error) {
 	tx := mysql.NewDB().Begin()
 
 	defer func() {
