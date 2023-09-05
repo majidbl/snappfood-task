@@ -11,8 +11,10 @@ import (
 )
 
 var (
-	testDB    *gorm.DB
-	agentTest IAgent
+	testDB          *gorm.DB
+	agentTest       IAgent
+	delayReportTest IDelayReport
+	vendorTest      IVendor
 )
 
 func TestMain(m *testing.M) {
@@ -31,6 +33,8 @@ func TestMain(m *testing.M) {
 	}
 
 	agentTest = NewAgent(testDB)
+	delayReportTest = NewDelayReport(testDB)
+	vendorTest = NewVendor(testDB)
 
 	os.Exit(m.Run())
 }

@@ -10,7 +10,7 @@ import (
 	"task/storage/mysqlstore/mocks"
 )
 
-func TestAppointmentService_GetCountAppointments(t *testing.T) {
+func TestDelayReport(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
