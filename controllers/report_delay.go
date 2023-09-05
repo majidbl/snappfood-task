@@ -7,7 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"task/dto"
-	"task/service"
 )
 
 // ReportDelay godoc
@@ -21,7 +20,7 @@ import (
 // @Failure	400 {object} dto.DelayReportResponse "some field is invalid"
 // @Failure	500 {object} dto.DelayReportResponse "other error"
 // @Router /api/v1/delay/report [post]
-func ReportDelay() echo.HandlerFunc {
+func (ctrl Controller) ReportDelay() echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		var request dto.DelayReportRequest
 
@@ -37,7 +36,7 @@ func ReportDelay() echo.HandlerFunc {
 
 		c := ctx.Request().Context()
 
-		res, err := service.DelayReport(c, request)
+		res, err := ctrl.service.DelayReport(c, request)
 		if err != nil {
 			return ctx.JSON(http.StatusInternalServerError, err.Error())
 		}

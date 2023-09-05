@@ -4,26 +4,26 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"task/dto"
+	"task/storage/mysqlstore"
 	"time"
 
+	"task/dto"
 	"task/models"
 	"task/storage"
-	"task/storage/mysql"
 	"task/storage/queue"
 	"task/util"
 )
 
-func DelayReport(ctx context.Context, request dto.DelayReportRequest) (dto.DelayReportResponse, error) {
-	store := mysql.NewStore()
+func (s service) DelayReport(ctx context.Context, request dto.DelayReportRequest) (dto.DelayReportResponse, error) {
+	//store := mysql.NewStore()
 
 	var res dto.DelayReportResponse
 
-	err := store.Transaction(
+	err := s.db.Transaction(
 		ctx,
-		func(c context.Context, store mysql.Store) error {
+		func(c context.Context, store mysqlstore.IStore) error {
 			// Check order exists and it's delivery time passed
-			order, err := store.GetOrderById(c, request.OrderId)
+			order, err := store.Order().GetOrderById(c, request.OrderId)
 			if err != nil {
 				if err.Error() == storage.NotFound {
 					res.Code = models.ErrCode[models.OrderNotFountError]
@@ -54,7 +54,7 @@ func DelayReport(ctx context.Context, request dto.DelayReportRequest) (dto.Delay
 			}
 
 			// Check order trips exists and it's status is ok
-			orderTrips, getOrderTripsErr := store.GetOrderTrip(c, request.OrderId)
+			orderTrips, getOrderTripsErr := store.Trip().GetOrderTrip(c, request.OrderId)
 			if getOrderTripsErr != nil && getOrderTripsErr.Error() != models.OrderTripsNotFountError {
 				res.Code = models.ErrCode[models.OrderTripsNotFountError]
 				res.Message = models.OrderTripsNotFountError
@@ -68,7 +68,7 @@ func DelayReport(ctx context.Context, request dto.DelayReportRequest) (dto.Delay
 					return queueErr
 				}
 
-				return store.CreateDelayReport(
+				return store.DelayReport().CreateDelayReport(
 					c,
 					&models.DelayReport{
 						OrderID:  request.OrderId,
@@ -92,7 +92,7 @@ func DelayReport(ctx context.Context, request dto.DelayReportRequest) (dto.Delay
 					return queueErr
 				}
 
-				return store.CreateDelayReport(
+				return store.DelayReport().CreateDelayReport(
 					ctx,
 					&models.DelayReport{
 						OrderID:      order.ID,
@@ -110,9 +110,9 @@ func DelayReport(ctx context.Context, request dto.DelayReportRequest) (dto.Delay
 	return res, err
 }
 
-func CheckOrderDelayReport(c context.Context, store mysql.Store, orderId uint) (dto.DelayReportResponse, error) {
+func CheckOrderDelayReport(c context.Context, store mysqlstore.IStore, orderId uint) (dto.DelayReportResponse, error) {
 	var res dto.DelayReportResponse
-	orderDelayReport, orderDelayReportErr := store.GetOrderDelayReport(c, orderId)
+	orderDelayReport, orderDelayReportErr := store.DelayReport().GetOrderDelayReport(c, orderId)
 	if orderDelayReportErr != nil && orderDelayReportErr.Error() != storage.NotFound {
 		log.Println(orderDelayReportErr.Error())
 		res.Code = models.ErrCode[models.InternalErrorError]

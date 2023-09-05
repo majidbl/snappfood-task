@@ -6,7 +6,6 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"task/models"
-	"task/service"
 )
 
 type ReportDelayResponse struct {
@@ -25,13 +24,13 @@ type ReportDelayResponse struct {
 // @Failure	400 {object} ReportDelayResponse "some field is invalid"
 // @Failure	500 {object} ReportDelayResponse "other error"
 // @Router /api/v1/delay/report [get]
-func DelayReport() echo.HandlerFunc {
+func (ctrl Controller) DelayReport() echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		c := ctx.Request().Context()
 
 		var response ReportDelayResponse
 
-		res, err := service.ReportDelay(c)
+		res, err := ctrl.service.ReportDelay(c)
 		if err != nil {
 			response.Code = models.ErrCode[models.InternalErrorError]
 			response.Message = models.InternalErrorError

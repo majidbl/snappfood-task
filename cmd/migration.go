@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 
 	"task/config"
-	mysqlStorage "task/storage/mysql"
+	mysqlStorage "task/storage/mysqlstore"
 )
 
 // migrationCmd represents the migration command

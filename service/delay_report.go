@@ -4,9 +4,8 @@ import (
 	"context"
 
 	"task/models"
-	"task/storage/mysql"
 )
 
-func ReportDelay(ctx context.Context) ([]models.VendorDelay, error) {
-	return mysql.NewStore().GetVendorsTotalDelay(ctx)
+func (s service) ReportDelay(ctx context.Context) ([]models.VendorDelay, error) {
+	return s.vendorDb.GetVendorsTotalDelay(ctx)
 }
