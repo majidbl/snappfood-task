@@ -25,7 +25,7 @@ var restCmd = &cobra.Command{
 		if err != nil {
 			panic(err.Error())
 		}
-		api.NewServer(c)
+		app.NewServer(c)
 	},
 }
 
