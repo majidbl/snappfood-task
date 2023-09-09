@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/gommon/log"
 
 	"task/dto"
+	"task/util"
 )
 
 // AssignDelay godoc
@@ -38,7 +39,7 @@ func (ctrl Controller) AssignDelay() echo.HandlerFunc {
 		res, err := ctrl.service.AssignDelay(c, request)
 		if err != nil {
 			log.Warn(err.Error())
-			return ctx.JSON(http.StatusInternalServerError, err.Error())
+			return ctx.JSON(http.StatusInternalServerError, util.CastError(err))
 		}
 
 		return ctx.JSON(http.StatusOK, res)

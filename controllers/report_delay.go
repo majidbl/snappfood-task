@@ -5,8 +5,10 @@ import (
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 
 	"task/dto"
+	"task/util"
 )
 
 // ReportDelay godoc
@@ -38,7 +40,8 @@ func (ctrl Controller) ReportDelay() echo.HandlerFunc {
 
 		res, err := ctrl.service.DelayReport(c, request)
 		if err != nil {
-			return ctx.JSON(http.StatusInternalServerError, err.Error())
+			log.Warn(err.Error())
+			return ctx.JSON(http.StatusInternalServerError, util.CastError(err))
 		}
 
 		return ctx.JSON(http.StatusOK, res)

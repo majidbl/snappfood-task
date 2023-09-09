@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 
 	"task/models"
 )
@@ -32,6 +33,7 @@ func (ctrl Controller) DelayReport() echo.HandlerFunc {
 
 		res, err := ctrl.service.ReportDelay(c)
 		if err != nil {
+			log.Warn(err.Error())
 			response.Code = models.ErrCode[models.InternalErrorError]
 			response.Message = models.InternalErrorError
 			return ctx.JSON(http.StatusInternalServerError, response)
