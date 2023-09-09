@@ -12,6 +12,10 @@ services:
     restart: on-failure
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 2s
+      retries: 3
   api:
     build:
       context: .
@@ -21,7 +25,8 @@ services:
     environment:
       - DB_SOURCE=root:root@tcp(mysql:3306)/task_db?charset=utf8mb4&parseTime=True&loc=Local
     depends_on:
-      - mysql
+       mysql:
+          condition: service_healthy
     entrypoint: ["/app/start.sh"]
     command: [ "/app/task" ]
 

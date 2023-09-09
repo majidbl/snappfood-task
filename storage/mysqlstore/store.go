@@ -66,7 +66,7 @@ func (s transaction) Transaction(ctx context.Context, fn Fn) (err error) {
 			panic(p)
 		}
 		if err != nil {
-			if rbErr := tx.Rollback(); rbErr != nil {
+			if rbErr := tx.Rollback(); rbErr.Error != nil {
 				err = fmt.Errorf("tx err: %v, rb err: %v", err, rbErr)
 			}
 		} else {
